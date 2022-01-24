@@ -38,8 +38,8 @@ public class Empresa {
             cif = Textos.pedirString("CIF: ");
             nombre = Textos.pedirString("Nombre: ");
             fecha = Textos.pedirFecha("Fecha: ");
-            dven = Numeros.pedirNumero("Dias vencimiento, 0", ncliente);
-            importe = Numeros.pedirNumeroReal("Importe factura", 1);
+            dven = Numeros.pedirNumero("Dias vencimiento: ", 0);
+            importe = Numeros.pedirNumeroReal("Importe factura: ", 1);
 
             clientes[ncliente] = new Cliente(cif, nombre, fecha, dven, importe);
 
@@ -59,6 +59,13 @@ public class Empresa {
         float descuento;
         float importeNeto;
         int pos;
+        
+        int annoSig=fhoy.getAnno();
+        int mesSig=fhoy.getMes()+1;
+        if(mesSig>11){
+            annoSig++;
+            mesSig=0;
+        }
 
         System.out.println("\t\t\t\t INFORME DE FACTURAS");
         System.out.println("\t\t\t\t Fecha " + fhoy.fechaCompleta());
@@ -80,14 +87,18 @@ public class Empresa {
                     clientes[ncli].getFechaFra().getAnno());
 
             vencimiento.calcularVencimiento(clientes[ncli].getDiasVen());
+            if (importeNeto > 10000 && vencimiento.getMes()==mesSig &&
+                    vencimiento.getAnno()==annoSig) {
 
-            System.out.println(clientes[ncli].getCif());
-            System.out.println("\t" + clientes[ncli].getNombre());
-            System.out.println("\t" + clientes[ncli].getFechaFra().fechaCompleta());
-            System.out.println("\t" + clientes[ncli].getImporte());
-            System.out.println("\t" + vencimiento.fechaCompleta());
-            System.out.println("\t" + importeNeto);
+                System.out.print(clientes[ncli].getCif());
+                System.out.print("\t" + clientes[ncli].getNombre());
+                System.out.print("\t" + clientes[ncli].getFechaFra().fechaCompleta());
+                System.out.print("\t" + clientes[ncli].getImporte());
+                System.out.print("\t" + vencimiento.fechaCompleta());
+                System.out.println("\t" + importeNeto);
+            }
         }
+        
     }
 
     /**
@@ -107,11 +118,12 @@ public class Empresa {
             } else {
                 encontrado = true;
             }
+        }
             if (!encontrado) {
                 pos = -1;
             }
+
         
-        }
         return pos;
     }
 }

@@ -51,7 +51,7 @@ public class EjArrays5 {
         Empresa miEmpresa;
         int nclientes;
         
-        nclientes=Numeros.pedirNumero("Introduce el número de cliente: ", 0);
+        nclientes=Numeros.pedirNumero("Introduce el número de clientes: ", 0);
         miEmpresa= new Empresa (nclientes);
         miEmpresa.pedirClientes();
         miEmpresa.informe();
