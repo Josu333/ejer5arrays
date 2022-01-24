@@ -42,34 +42,76 @@ public class Empresa {
             importe = Numeros.pedirNumeroReal("Importe factura", 1);
 
             clientes[ncliente] = new Cliente(cif, nombre, fecha, dven, importe);
-            
-             /**
-              o:
-             
-               clientes[nclientes]= new Cliente ();
-              clientes [ncliente].grabar(......);
-             **/
+
+            /**
+             * o:
+             *
+             * clientes[nclientes]= new Cliente (); clientes
+             * [ncliente].grabar(......);
+             *
+             */
         }
     }
-    public void informe(){
-        Fecha fhoy = new Fecha ();
-        System.out.println("\t\t\t\tINFORME DE FACTURAS");
-        System.out.println("Fecha "+fhoy.fechaCompleta());
+
+    public void informe() {
+        Fecha fhoy = new Fecha();
+
+        float descuento;
+        float importeNeto;
+        int pos;
+
+        System.out.println("\t\t\t\t INFORME DE FACTURAS");
+        System.out.println("\t\t\t\t Fecha " + fhoy.fechaCompleta());
         System.out.println("CIF\t NOMBRE\t FECHA FACTURA\t IMPORTE BRUTO \t "
                 + "FECHA VENCIMIENTO \t IMPORTE NETO");
-        
-        for(int ncli=0; ncli >clientes.length;ncli++)
-        {
+
+        for (int ncli = 0; ncli < clientes.length; ncli++) {
+            pos = busqueda(clientes[ncli].getDiasVen());
+            if (pos == -1) {
+                descuento = 0;
+            } else {
+                descuento = clientes[ncli].getImporte() * descuentos[pos].getDescuento();
+            }
+            importeNeto = clientes[ncli].getImporte() - descuento;
+
             Fecha vencimiento = new Fecha(
                     clientes[ncli].getFechaFra().getDia(),
                     clientes[ncli].getFechaFra().getMes(),
                     clientes[ncli].getFechaFra().getAnno());
+
             vencimiento.calcularVencimiento(clientes[ncli].getDiasVen());
+
             System.out.println(clientes[ncli].getCif());
-            System.out.println("\t"+ clientes[ncli].getNombre());
-            System.out.println("\t"+ clientes[ncli].getFechaFra().fechaCompleta());
-            System.out.println("\t"+clientes[ncli].getImporte());
-            System.out.println("\t"+vencimiento.fechaCompleta());
+            System.out.println("\t" + clientes[ncli].getNombre());
+            System.out.println("\t" + clientes[ncli].getFechaFra().fechaCompleta());
+            System.out.println("\t" + clientes[ncli].getImporte());
+            System.out.println("\t" + vencimiento.fechaCompleta());
+            System.out.println("\t" + importeNeto);
         }
+    }
+
+    /**
+     * Metodo para buscar en una tabla de rangos el porcentaje adecuado de
+     * descuento al cliente. VER indexOF (sirve para localizar pos de un string)
+     *
+     * @param valor del elemento a buscar
+     * @return posicion del valor encontrado y en el caso de que no lo
+     * encuentre.
+     */
+    public int busqueda(int valor) {
+        int pos = 0;
+        boolean encontrado = false;
+        while (!encontrado && pos < descuentos.length) {
+            if (valor > descuentos[pos].getLimite()) {
+                pos++;
+            } else {
+                encontrado = true;
+            }
+            if (!encontrado) {
+                pos = -1;
+            }
+        
+        }
+        return pos;
     }
 }
